@@ -20,4 +20,13 @@ spec = do
       contents <- readFile "test/day2.input.txt"
       bathCode contents `shouldBe` [6, 5, 5, 5, 6]
 
+  describe "Fancy Bath Code " $ do
+    it "returns 1 for ULL" $ do
+      fancyBathCode "ULL\nRRDDD" `shouldBe` "5D"
 
+    it "returns B for RRDD" $ do
+      fancyBathCode "RRD" `shouldBe` "B"
+
+    it "calculates the code from the file" $ do
+      contents <- readFile "test/day2.input.txt"
+      fancyBathCode contents `shouldBe` "CB779"

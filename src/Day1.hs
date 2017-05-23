@@ -29,13 +29,16 @@ firstLocTwice = sumCoords
               . map parseCmd
               . splitOn ", "
 
+  where 
+    fst4 (a, _, _, _) = a
+
 move :: Pos -> Command -> Pos
 move (p, dir) (cmd, n) = (p', dir')
   where
     dir' = changeDir dir cmd
     p'   = last $ walking dir' p n
 
-walk (Just x, a, b, c) _ = (Just x, a, b, c)
+walk found@(Just x, _, _, _) _ = found
 walk (_, vis, pos, dir) (cmd, n) = (found, vis', pos', dir')
   where
     found  = listToMaybe $ intersect vis blocks
@@ -44,7 +47,6 @@ walk (_, vis, pos, dir) (cmd, n) = (found, vis', pos', dir')
     vis'   = vis ++ blocks
     blocks = walking dir' pos n
 
-fst4 (a, _, _, _) = a
 
 walking North (x, y) n = [(x, y) | y <- [y+1..y+n]]
 walking East  (x, y) n = [(x, y) | x <- [x+1..x+n]]
