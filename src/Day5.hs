@@ -7,6 +7,7 @@ import qualified Data.ByteString.Lazy.Char8 as B
 import Data.Digest.Pure.MD5
 import Control.Applicative
 import qualified Data.Map.Strict as Map
+import Data.Maybe
 
 findPwd :: String -> String
 findPwd = map (!! 5)
@@ -18,7 +19,7 @@ findPwd = map (!! 5)
 findPwdB = Map.elems
          . head
          . dropWhile (not . fullPwd)
-         . scanl assignPwd emptyPwd
+         . scanl storePwd emptyPwd
          . filter (sw5z .&&. validPos)
          . map toMd5
          . pwdSeq 
@@ -28,7 +29,8 @@ findPwdB = Map.elems
     (.&&.) = liftA2 (&&)
     emptyPwd = Map.empty
     fullPwd p = Map.keys p == "01234567"
-    assignPwd p hsh = Map.insert (hsh !! 5) (hsh !! 6) p
+    storePwd p m = Map.alter setOnce (m !! 5) p
+      where setOnce = Just . fromMaybe (m !! 6)
 
 toMd5 = show . md5 . B.pack
 sw5z = (== "00000") . take 5

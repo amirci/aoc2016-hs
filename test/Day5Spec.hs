@@ -19,6 +19,9 @@ spec = do
 
   describe "Part B - find password" $ do
 
+    -- it "finds password for example abc" $ do
+    --  findPwdB "abc" `shouldBe` "05ace8e3"
+
     it "finds password using MD5" $ do
       findPwdB "reyedfim" `shouldBe` "863dde27"
 
