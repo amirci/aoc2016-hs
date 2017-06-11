@@ -12,8 +12,13 @@ main = hspec spec
 spec :: Spec
 spec = do
 
-  describe "Part A - find password" $ do
+  --describe "Part A - find password" $ do
+
+  --  it "finds password using MD5" $ do
+  --    findPwd "reyedfim" `shouldBe` "f97c354d"
+
+  describe "Part B - find password" $ do
 
     it "finds password using MD5" $ do
-      findPwd "reyedfim" `shouldBe` "f97c354d"
+      findPwdB "reyedfim" `shouldBe` "863dde27"
 
