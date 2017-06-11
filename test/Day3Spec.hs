@@ -22,6 +22,6 @@ spec = do
 
     it "calculates all the possible triangles" $ do
       contents <- readFile "test/day3.input.txt"
-      possTri contents `shouldBe` 982
+      possTriB contents `shouldBe` 1826
 
 
