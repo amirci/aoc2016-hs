@@ -6,11 +6,13 @@ import Debug.Trace
 import Data.Ord
 
 origMsg :: String -> String
-origMsg = map mostCommon
-        . transpose
-        . splitLines
+origMsg = findCommon maximumBy
+
+origMsgB = findCommon minimumBy
+
+findCommon f = map common . transpose . splitLines
   where
-    mostCommon = fst . maximumBy (comparing snd) . freq
+    common = fst . f (comparing snd) . freq
 
 splitLines = filter notEmpty . splitOn "\n"
 notEmpty = (> 0) . length 

@@ -18,3 +18,9 @@ spec = do
       contents <- readFile "test/day6.input.txt"
       origMsg contents `shouldBe` "qtbjqiuq"
 
+  describe "Part B - find original message" $ do
+
+    it "finds original message in the file" $ do
+      contents <- readFile "test/day6.input.txt"
+      origMsgB contents `shouldBe` "akothqli"
+
