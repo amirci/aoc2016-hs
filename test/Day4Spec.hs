@@ -18,3 +18,10 @@ spec = do
       rooms <- readFile "test/day4.input.txt"
       sumRealRooms rooms `shouldBe` 158835
 
+  describe "Part B - decipher North Pole Objects" $ do
+
+    it "Finds the sector ID for NPO room" $ do
+      rooms <- readFile "test/day4.input.txt"
+      findNPO rooms `shouldBe` 993
+
+

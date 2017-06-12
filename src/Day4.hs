@@ -3,6 +3,7 @@ module Day4 where
 import Data.List.Split
 import Data.List
 import Debug.Trace
+import Data.Char
 
 type Room = String
 
@@ -12,27 +13,48 @@ sumRealRooms = sum
              . filter isReal 
              . map parseRoom
              . splitLines
-  where
-    splitLines = filter notEmpty . splitOn "\n"
-    notEmpty = (> 0) . length 
-    secId (sid, _, _) = sid
 
-isReal (_, chars, check) = check == check'
+findNPO :: String -> Int
+findNPO = secId
+        . head
+        . filter isNpo
+        . map parseRoom
+        . splitLines
+
+isNpo (sid, words, _) = (== "northpoleobjectstorage")
+                      $ map decipher 
+                      $ concat words
+  where
+    decipher = cipher sid
+
+cipher sid c = chr
+         $ (+ base)
+         $ (`mod` 26)
+         $ ord c + shift - base
+  where
+    base = ord 'a'
+    shift = sid `mod` 26
+
+splitLines = filter notEmpty . splitOn "\n"
+notEmpty = (> 0) . length 
+secId (sid, _, _) = sid
+
+isReal (_, words, check) = check == check'
   where
     check' = map fst 
            $ take 5 
            $ sortBy mostCommon 
-           $ freq chars
+           $ freq 
+           $ concat words
     mostCommon (a, l) (a', l') 
       | l  > l' = LT
       | l  < l' = GT
       | l == l' = compare a a'
 
 
-parseRoom r = (readInt sectorId, chars, checksum)
+parseRoom r = (readInt sectorId, init tokens, checksum)
   where
     tokens = splitOn "-" r
-    chars = concat $ init tokens
     [sectorId, checksum, _] = splitOneOf "[]" $ last tokens
     readInt = read :: String -> Int
 
