@@ -12,16 +12,9 @@ main = hspec spec
 spec :: Spec
 spec = do
 
-  describe "Part A - Possible triangles" $ do
+  describe "Part A - count real rooms" $ do
 
-    it "calculates all the possible triangles" $ do
-      contents <- readFile "test/day3.input.txt"
-      possTri contents `shouldBe` 982
-
-  describe "Part B - Possible triangles" $ do
-
-    it "calculates all the possible triangles" $ do
-      contents <- readFile "test/day3.input.txt"
-      possTriB contents `shouldBe` 1826
-
+    it "Adds up the sector ids of real rooms" $ do
+      rooms <- readFile "test/day4.input.txt"
+      sumRealRooms rooms `shouldBe` 158835
 

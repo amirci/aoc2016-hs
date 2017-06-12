@@ -12,16 +12,20 @@ main = hspec spec
 spec :: Spec
 spec = do
 
+  describe "Dummy" $ do
+    it "is dummy" $ do
+      True `shouldBe` True
+
   --describe "Part A - find password" $ do
 
   --  it "finds password using MD5" $ do
   --    findPwd "reyedfim" `shouldBe` "f97c354d"
 
-  describe "Part B - find password" $ do
+  -- describe "Part B - find password" $ do
 
-    -- it "finds password for example abc" $ do
-    --  findPwdB "abc" `shouldBe` "05ace8e3"
+  --   it "finds password for example abc" $ do
+  --     findPwdB "abc" `shouldBe` "05ace8e3"
 
-    it "finds password using MD5" $ do
-      findPwdB "reyedfim" `shouldBe` "863dde27"
+  --   it "finds password using MD5" $ do
+  --     findPwdB "reyedfim" `shouldBe` "863dde27"
 
