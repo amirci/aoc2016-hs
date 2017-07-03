@@ -12,12 +12,22 @@ main = hspec spec
 spec :: Spec
 spec = do
 
-  describe "Part A - count how may ips support ssl" $ do
+  describe "Part A - count how may ips support TLS" $ do
 
-    it "checks the string supports ssl" $ do
-      sslSupport "abba[bab]xyz" `shouldBe` True
+    it "checks the string supports TLS" $ do
+      tlsSupport "abba[bab]xyz" `shouldBe` True
 
     it "How many pwds support TLS" $ do
       contents <- readFile "test/day7.input.txt"
-      sslCount contents `shouldBe` 115
+      ipCount tlsSupport contents `shouldBe` 115
+
+
+  describe "Part B - count how may ips support SSL" $ do
+
+    it "checks the string supports SSL" $ do
+      sslSupport "aba[bab]xyz" `shouldBe` True
+
+    it "How many pwds support SSL" $ do
+      contents <- readFile "test/day7.input.txt"
+      ipCount sslSupport contents `shouldBe` 231
 

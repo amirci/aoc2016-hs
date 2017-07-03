@@ -6,23 +6,37 @@ import Text.Parsec
 import Data.Bifunctor
 
 
-sslCount :: String -> Int
-sslCount = length . filter sslSupport . lines
+ipCount :: (String -> Bool) -> String -> Int
+ipCount f = length . filter f . lines
 
-sslSupport :: String -> Bool
-sslSupport = supernetButNotHypernet . findAbba . parseLine
+-- Part A
+tlsSupport :: String -> Bool
+tlsSupport = supernetButNotHypernet . findAbba . parseLine
   where
     supernetButNotHypernet = (== (True, False))
     hasAbba = or . map anyAbba
     findAbba = bimap hasAbba hasAbba
-    parseLine = unzip
-              . fromRight 
-              . parse lineParser "(source)"
+    anyAbba = notEmpty . filter isAbba . cuartets
+      where
+        isAbba (a, b, c, d) = a == d && b == c && a /= b
+        cuartets s = zip4 s (drop 1 s) (drop 2 s) (drop 3 s)
 
-anyAbba = notEmpty . filter isAbba . split4
+-- Part B
+sslSupport :: String -> Bool
+sslSupport = abaCorrespondsBab
+           . second (map flipBab)
+           . bimap abaTriplets abaTriplets
+           . parseLine
   where
-    isAbba (a, b, c, d) = a == d && b == c && a /= b
-    split4 s = zip4 s (drop 1 s) (drop 2 s) (drop 3 s)
+    abaCorrespondsBab (abas, babs) = notEmpty $ intersect abas babs
+    flipBab (a, b, _) = (b, a, b)
+    abaTriplets = filter isAba . concatMap triplets
+    triplets s = zip3 s (drop 1 s) (drop 2 s)
+    isAba (a, b, c) = a == c && a /= b
+
+parseLine = unzip
+          . fromRight 
+          . parse lineParser "(source)"
 
 fromRight (Right s) = s
 fromRight _ = []
