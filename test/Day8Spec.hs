@@ -19,4 +19,6 @@ spec = do
     it "Count for example" $ do
       countPx ["rect 3x2"] `shouldBe` 6
 
+    it "Count for example 2" $ do
+      countPx ["rect 3x2", "rotate column x=1 by 1"] `shouldBe` 6
 
