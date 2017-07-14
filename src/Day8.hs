@@ -9,8 +9,8 @@ import qualified Data.Vector as Vec
 
 bOff = '.'
 bOn  = '#'
-totalRows = 5
-totalCols = 60
+totalRows = 6
+totalCols = 50
 
 type Screen = Mat.Matrix Char
 type ScreenFn = Screen -> Screen
@@ -27,9 +27,7 @@ apply :: String -> ScreenFn
 apply = unwrap . parse instrParser "(unknown)"
   where
     unwrap = either (const $ const empty) id
-
-instrParser = try rectParser 
-          <|> rotateParser
+    instrParser = try rectParser <|> rotateParser
 
 shift :: Int -> [a] -> [a]
 shift n = reverse . shift' . reverse
@@ -46,27 +44,23 @@ rectParser :: Parsec String st ScreenFn
 rectParser = do
   string "rect"
   spaces
-  width <- read <$> many1 digit
+  width <- numberParser
   char 'x'
-  height <- read <$> many1 digit
+  height <- numberParser
   return $ turnOnRect width height
 
 -- rotate column x=1 by 1
 rotateCol :: Int -> Int -> ScreenFn
-rotateCol col n s = replace shifted
-  where
-    shifted = shift n $ Vec.toList $ Mat.getCol (col + 1) s
-    replace col = foldl setM s $ zip col [1..totalRows]
-    setM s (e, row) = Mat.setElem e (row, col + 1) s
+rotateCol col n s = setCol shifted (col + 1) s
+  where shifted = shift n $ Vec.toList $ Mat.getCol (col + 1) s
 
-rotateRow row n s = replace shifted
-  where
-    shifted = shift n $ Vec.toList $ Mat.getRow (row + 1) s
-    replace row = foldl setM s $ zip row [1..totalCols]
-    setM s (e, col) = Mat.setElem e (row + 1, col) s
+rotateRow row n s = setRow shifted (row + 1) s
+  where shifted = shift n $ Vec.toList $ Mat.getRow (row + 1) s
 
 setRow :: [a] -> Int -> Mat.Matrix a -> Mat.Matrix a
 setRow row = Mat.mapRow (\c _ -> row !! (c - 1))
+
+setCol col = Mat.mapCol (\c _ -> col !! (c - 1))
 
 rotateParser :: Parsec String st ScreenFn
 rotateParser = do
@@ -76,11 +70,11 @@ rotateParser = do
   spaces
   oneOf "xy"
   char '='
-  tgt <- read <$> many1 digit
+  tgt <- numberParser
   spaces
   string "by"
   spaces
-  n <- read <$> many1 digit
+  n <- numberParser
   return $ fn tgt n
 
 rotateFnParser :: Parsec String st (Int -> Int -> ScreenFn)
@@ -90,3 +84,5 @@ rotateFnParser = chooseFn <$> rowOrCol
     chooseFn "column" = rotateCol
     chooseFn "row" = rotateRow
   
+numberParser :: Parsec String st Int
+numberParser = read <$> many1 digit
